@@ -454,7 +454,7 @@ class Obenland_Wp_Display_Header extends Obenland_Wp_Plugins_v200 {
 		
 		$headers	=	$this->get_headers();
 		
-		if ( empty($headers) ) {
+		if ( empty( $headers ) ) {
 			printf(
 				__('The are no headers available. Please <a href="%s">upload a header image</a>!', 'wp-display-header'),
 				admin_url('themes.php?page=custom-header')
@@ -462,8 +462,8 @@ class Obenland_Wp_Display_Header extends Obenland_Wp_Plugins_v200 {
 			return;
 		}
 	
-		foreach ( array_keys($headers) as $header ) {
-			foreach ( array('url', 'thumbnail_url') as $url ) {
+		foreach ( array_keys( $headers ) as $header ) {
+			foreach ( array( 'url', 'thumbnail_url' ) as $url ) {
 				$headers[$header][$url] =  sprintf(
 					$headers[$header][$url],
 					get_template_directory_uri(),
@@ -475,6 +475,7 @@ class Obenland_Wp_Display_Header extends Obenland_Wp_Plugins_v200 {
 		wp_nonce_field( 'wp-display-header', 'wp-display-header-nonce' );
 		?>
 		<div class="available-headers">
+			<?php if ( 1 < count( $headers ) ) : ?>
 			<div class="random-header">
 				<label>
 					<input name="wp-display-header" type="radio" value="random" <?php checked( 'random', $active ); ?> />
@@ -482,18 +483,20 @@ class Obenland_Wp_Display_Header extends Obenland_Wp_Plugins_v200 {
 				</label>
 			</div>
 			<?php
-			foreach ( $headers as $header_key => $header ) {
+			endif;
+			
+			foreach ( $headers as $header_key => $header ) :
 				$header_url			=	$header['url'];
 				$header_thumbnail	=	$header['thumbnail_url'];
-				$header_desc 		=	isset($header['description']) ?	$header['description'] : '';
+				$header_desc 		=	isset( $header['description'] ) ? $header['description'] : '';
 			?>
 			<div class="default-header">
 				<label>
-					<input name="wp-display-header" type="radio" value="<?php echo esc_attr($header_url); ?>" <?php checked($header_url, $active); ?> />
-					<img width="230" src="<?php echo esc_url($header_thumbnail); ?>" alt="<?php echo esc_attr($header_desc); ?>" title="<?php echo esc_attr($header_desc); ?>" />
+					<input name="wp-display-header" type="radio" value="<?php echo esc_attr( $header_url ); ?>" <?php checked( $header_url, $active ); ?> />
+					<img width="230" src="<?php echo esc_url( $header_thumbnail ); ?>" alt="<?php echo esc_attr( $header_desc ); ?>" title="<?php echo esc_attr( $header_desc ); ?>" />
 				</label>
 			</div>
-			<?php } ?>
+			<?php endforeach; ?>
 			<div class="clear"></div>
 			
 			<?php submit_button( __( 'Restore Original Header Image' ), 'button', 'wpdh-reset-header', false ); ?>
